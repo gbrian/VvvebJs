@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-https://github.com/givan/Vvvebjs
+https://github.com/givanz/Vvvebjs
 */
 
 bgcolorClasses = ["bg-primary", "bg-secondary", "bg-success", "bg-danger", "bg-warning", "bg-info", "bg-light", "bg-dark", "bg-white"]
@@ -69,29 +69,851 @@ function changeNodeName(node, newNodeName)
 }
 
 Vvveb.ComponentsGroup['Bootstrap 4'] =
-["html/products", "html/categories", "html/search", "html/user", "html/product_gallery", "html/cart", "html/checkout", "html/filters", "html/product", "html/slider", "html/gridrow", "html/button", "html/buttongroup", "html/buttontoolbar", "html/heading", "html/image", "html/jumbotron", "html/alert", "html/card", "html/listgroup", "html/hr", "html/taglabel", "html/badge", "html/progress", "html/navbar", "html/breadcrumbs", "html/pagination", "html/form", "html/textinput", "html/textareainput", "html/selectinput", "html/fileinput", "html/checkbox", "html/radiobutton", "html/table", "html/container"];
+["html/container", "html/gridrow", "html/button", "html/buttongroup", "html/buttontoolbar", "html/heading", "html/image", "html/jumbotron", "html/alert", "html/card", "html/listgroup", "html/hr", "html/taglabel", "html/badge", "html/progress", "html/navbar", "html/breadcrumbs", "html/pagination", "html/form", "html/textinput", "html/textareainput", "html/selectinput", "html/fileinput", "html/checkbox", "html/radiobutton", "html/table", "html/paragraph", "html/link", "html/video", "html/button"];
 
 
+var base_sort = 100;//start sorting for base component from 100 to allow extended properties to be first
+var style_section = 'style';
 
 Vvveb.Components.add("_base", {
     name: "Element",
 	properties: [{
+        key: "element_header",
+        inputtype: SectionInput,
+        name:false,
+        sort:base_sort++,
+        data: {header:"General"},
+    }, {
         name: "Id",
         key: "id",
         htmlAttr: "id",
+        sort: base_sort++,
+        inline:true,
+        col:6,
         inputtype: TextInput
     }, {
         name: "Class",
         key: "class",
         htmlAttr: "class",
+        sort: base_sort++,
+        inline:true,
+        col:6,
         inputtype: TextInput
+    }
+   ]
+});    
+
+//display
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [
+     {
+        key: "display_header",
+        inputtype: SectionInput,
+        name:false,
+        sort: base_sort++,
+		section: style_section,
+        data: {header:"Display"},
+    }, {
+        name: "Display",
+        key: "display",
+        htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        validValues: ["block", "inline", "inline-block", "none"],
+        data: {
+            options: [{
+                value: "block",
+                text: "Block"
+            }, {
+                value: "inline",
+                text: "Inline"
+            }, {
+                value: "inline-block",
+                text: "Inline Block"
+            }, {
+                value: "none",
+                text: "none"
+            }]
+        }
+    }, {
+        name: "Position",
+        key: "position",
+        htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        validValues: ["static", "fixed", "relative", "absolute"],
+        data: {
+            options: [{
+                value: "static",
+                text: "Static"
+            }, {
+                value: "fixed",
+                text: "Fixed"
+            }, {
+                value: "relative",
+                text: "Relative"
+            }, {
+                value: "absolute",
+                text: "Absolute"
+            }]
+        }
+    }, {
+        name: "Top",
+        key: "top",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        parent:"",
+        inputtype: CssUnitInput
+	}, {
+        name: "Left",
+        key: "left",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        parent:"",
+        inputtype: CssUnitInput
+    }, {
+        name: "Bottom",
+        key: "bottom",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        parent:"",
+        inputtype: CssUnitInput
+	}, {
+        name: "Right",
+        key: "right",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        parent:"",
+        inputtype: CssUnitInput
+    },{
+        name: "Float",
+        key: "float",
+        htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:12,
+        inline:true,
+        inputtype: RadioButtonInput,
+        data: {
+			extraclass:"btn-group-sm btn-group-fullwidth",
+            options: [{
+                value: "none",
+                icon:"la la-close",
+                //text: "None",
+                title: "None",
+                checked:true,
+            }, {
+                value: "left",
+                //text: "Left",
+                title: "Left",
+                icon:"la la-align-left",
+                checked:false,
+            }, {
+                value: "right",
+                //text: "Right",
+                title: "Right",
+                icon:"la la-align-right",
+                checked:false,
+            }],
+         }
+	}, {
+        name: "Opacity",
+        key: "opacity",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:12,
+		inline:true,
+        parent:"",
+        inputtype: RangeInput,
+        data:{
+			max: 1, //max zoom level
+			min:0,
+			step:0.1
+       },
+	}, {
+        name: "Background Color",
+        key: "background-color",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+		htmlAttr: "style",
+        inputtype: ColorInput,
+	}, {
+        name: "Text Color",
+        key: "color",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+		htmlAttr: "style",
+        inputtype: ColorInput,
+  	}]
+});    
+
+//Typography
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [
+     {
+		key: "typography_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Typography"},
+    }, {
+        name: "Font family",
+        key: "font-family",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {
+				value: "Arial, Helvetica, sans-serif",
+				text: "Arial"
+			}, {
+				value: 'Lucida Sans Unicode", "Lucida Grande", sans-serif',
+				text: 'Lucida Grande'
+			}, {
+				value: 'Palatino Linotype", "Book Antiqua", Palatino, serif',
+				text: 'Palatino Linotype'
+			}, {
+				value: '"Times New Roman", Times, serif',
+				text: 'Times New Roman'
+			}, {
+				value: "Georgia, serif",
+				text: "Georgia, serif"
+			}, {
+				value: "Tahoma, Geneva, sans-serif",
+				text: "Tahoma"
+			}, {
+				value: 'Comic Sans MS, cursive, sans-serif',
+				text: 'Comic Sans'
+			}, {
+				value: 'Verdana, Geneva, sans-serif',
+				text: 'Verdana'
+			}, {
+				value: 'Impact, Charcoal, sans-serif',
+				text: 'Impact'
+			}, {
+				value: 'Arial Black, Gadget, sans-serif',
+				text: 'Arial Black'
+			}, {
+				value: 'Trebuchet MS, Helvetica, sans-serif',
+				text: 'Trebuchet'
+			}, {
+				value: 'Courier New", Courier, monospace',
+				text: 'Courier New", Courier, monospace'
+			}, {
+				value: 'Brush Script MT, sans-serif',
+				text: 'Brush Script'
+			}]
+		}
+	}, {
+        name: "Font weight",
+        key: "font-weight",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "100",
+				text: "Thin"
+			}, {
+				value: "200",
+				text: "Extra-Light"
+			}, {
+				value: "300",
+				text: "Light"
+			}, {
+				value: "400",
+				text: "Normal"
+			}, {
+				value: "500",
+				text: "Medium"
+			}, {
+				value: "600",
+				text: "Semi-Bold"
+			}, {
+				value: "700",
+				text: "Bold"
+			}, {
+				value: "800",
+				text: "Extra-Bold"
+			}, {
+				value: "900",
+				text: "Ultra-Bold"
+			}],
+		}
+	}, {
+        name: "Text align",
+        key: "text-align",
+        htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:12,
+        inline:true,
+        inputtype: RadioButtonInput,
+        data: {
+			extraclass:"btn-group-sm btn-group-fullwidth",
+            options: [{
+                value: "none",
+                icon:"la la-close",
+                //text: "None",
+                title: "None",
+                checked:true,
+            }, {
+                value: "left",
+                //text: "Left",
+                title: "Left",
+                icon:"la la-align-left",
+                checked:false,
+            }, {
+                value: "center",
+                //text: "Center",
+                title: "Center",
+                icon:"la la-align-center",
+                checked:false,
+            }, {
+                value: "right",
+                //text: "Right",
+                title: "Right",
+                icon:"la la-align-right",
+                checked:false,
+            }, {
+                value: "justify",
+                //text: "justify",
+                title: "Justify",
+                icon:"la la-align-justify",
+                checked:false,
+            }],
+        },
+	}, {
+        name: "Line height",
+        key: "line-height",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Letter spacing",
+        key: "letter-spacing",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Text decoration",
+        key: "text-decoration-line",
+        htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:12,
+        inline:true,
+        inputtype: RadioButtonInput,
+        data: {
+			extraclass:"btn-group-sm btn-group-fullwidth",
+            options: [{
+                value: "none",
+                icon:"la la-close",
+                //text: "None",
+                title: "None",
+                checked:true,
+            }, {
+                value: "underline",
+                //text: "Left",
+                title: "underline",
+                icon:"la la-long-arrow-down",
+                checked:false,
+            }, {
+                value: "overline",
+                //text: "Right",
+                title: "overline",
+                icon:"la la-long-arrow-up",
+                checked:false,
+            }, {
+                value: "line-through",
+                //text: "Right",
+                title: "Line Through",
+                icon:"la la-strikethrough",
+                checked:false,
+            }, {
+                value: "underline overline",
+                //text: "justify",
+                title: "Underline Overline",
+                icon:"la la-arrows-v",
+                checked:false,
+            }],
+        },
+	}, {
+        name: "Decoration Color",
+        key: "text-decoration-color",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+		htmlAttr: "style",
+        inputtype: ColorInput,
+	}, {
+        name: "Decoration style",
+        key: "text-decoration-style",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "solid",
+				text: "Solid"
+			}, {
+				value: "wavy",
+				text: "Wavy"
+			}, {
+				value: "dotted",
+				text: "Dotted"
+			}, {
+				value: "dashed",
+				text: "Dashed"
+			}, {
+				value: "double",
+				text: "Double"
+			}],
+		}
+  }]
+})
+    
+//Size
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "size_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Size", expanded:false},
+	}, {
+        name: "Width",
+        key: "width",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Height",
+        key: "height",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Min Width",
+        key: "min-width",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Min Height",
+        key: "min-height",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Max Width",
+        key: "max-width",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Max Height",
+        key: "max-height",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }]
+});
+
+//Margin
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "margins_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Margin", expanded:false},
+	}, {
+        name: "Top",
+        key: "margin-top",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Right",
+        key: "margin-right",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Bottom",
+        key: "margin-bottom",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Left",
+        key: "margin-left",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }]
+});
+
+//Padding
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "paddings_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Padding", expanded:false},
+	}, {
+        name: "Top",
+        key: "padding-top",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Right",
+        key: "padding-right",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Bottom",
+        key: "padding-bottom",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Left",
+        key: "padding-left",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }]
+});
+
+
+//Border
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "border_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Border", expanded:false},
+	 }, {        
+        name: "Style",
+        key: "border-style",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:12,
+		inline:true,
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "solid",
+				text: "Solid"
+			}, {
+				value: "dotted",
+				text: "Dotted"
+			}, {
+				value: "dashed",
+				text: "Dashed"
+			}],
+		}
+	}, {
+        name: "Width",
+        key: "border-width",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+   	}, {
+        name: "Color",
+        key: "border-color",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+		htmlAttr: "style",
+        inputtype: ColorInput,
+	}]
+});    
+
+
+
+//Border radius
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "border_radius_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Border radius", expanded:false},
+	}, {
+        name: "Top Left",
+        key: "border-top-left-radius",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+	}, {
+        name: "Top Right",
+        key: "border-top-right-radius",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Bottom Left",
+        key: "border-bottom-left-radius",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }, {
+        name: "Bottom Right",
+        key: "border-bottom-right-radius",
+		htmlAttr: "style",
+        sort: base_sort++,
+		section: style_section,
+        col:6,
+		inline:true,
+        inputtype: CssUnitInput
+    }]
+});
+
+//Background image
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [{
+		key: "background_image_header",
+		inputtype: SectionInput,
+		name:false,
+		sort: base_sort++,
+		section: style_section,
+		data: {header:"Background Image", expanded:false},
+	 },{
+        name: "Image",
+        key: "Image",
+        sort: base_sort++,
+		section: style_section,
+		//htmlAttr: "style",
+        inputtype: ImageInput,
+        
+        init: function(node) {
+			var image = $(node).css("background-image").replace(/^url\(['"]?(.+)['"]?\)/, '$1');
+			return image;
+        },
+
+		onChange: function(node, value) {
+			
+			$(node).css('background-image', 'url(' + value + ')');
+			
+			return node;
+		}        
+
+   	}, {
+        name: "Repeat",
+        key: "background-repeat",
+        sort: base_sort++,
+		section: style_section,
+		htmlAttr: "style",
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "repeat-x",
+				text: "repeat-x"
+			}, {
+				value: "repeat-y",
+				text: "repeat-y"
+			}, {
+				value: "no-repeat",
+				text: "no-repeat"
+			}],
+		}
+   	}, {
+        name: "Size",
+        key: "background-size",
+        sort: base_sort++,
+		section: style_section,
+		htmlAttr: "style",
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "contain",
+				text: "contain"
+			}, {
+				value: "cover",
+				text: "cover"
+			}],
+		}
+   	}, {
+        name: "Position x",
+        key: "background-position-x",
+        sort: base_sort++,
+		section: style_section,
+		htmlAttr: "style",
+        col:6,
+		inline:true,
+		inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "center",
+				text: "center"
+			}, {	
+				value: "right",
+				text: "right"
+			}, {
+				value: "left",
+				text: "left"
+			}],
+		}
+   	}, {
+        name: "Position y",
+        key: "background-position-y",
+        sort: base_sort++,
+		section: style_section,
+		htmlAttr: "style",
+        col:6,
+		inline:true,
+		inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "Default"
+			}, {	
+				value: "center",
+				text: "center"
+			}, {	
+				value: "top",
+				text: "top"
+			}, {
+				value: "bottom",
+				text: "bottom"
+			}],
+		}
     }]
 });    
 
 Vvveb.Components.extend("_base", "html/container", {
     classes: ["container", "container-fluid"],
     image: "icons/container.svg",
-    html: '<div class="container"><div class="m-5">Container</div></div>',
+    html: '<div class="container" style="min-height:150px;"><div class="m-5">Container</div></div>',
     name: "Container",
     properties: [
      {
@@ -143,8 +965,7 @@ Vvveb.Components.extend("_base", "html/heading", {
 	properties: [
 	{
         name: "Size",
-        key: "id",
-        htmlAttr: "id",
+        key: "size",
         inputtype: SelectInput,
         
         onChange: function(node, value) {
@@ -187,6 +1008,8 @@ Vvveb.Components.extend("_base", "html/heading", {
 Vvveb.Components.extend("_base", "html/link", {
     nodes: ["a"],
     name: "Link",
+    html: '<a href="#" class="d-inline-block"><span>Link</span></a>',
+	image: "icons/link.svg",
     properties: [{
         name: "Url",
         key: "href",
@@ -202,7 +1025,7 @@ Vvveb.Components.extend("_base", "html/link", {
 Vvveb.Components.extend("_base", "html/image", {
     nodes: ["img"],
     name: "Image",
-    html: '<img src="../libs/builder/icons/image.svg" height="128" width="128">',
+    html: '<img src="' +  Vvveb.baseUrl + 'icons/image.svg" height="128" width="128">',
     /*
     afterDrop: function (node)
 	{
@@ -214,7 +1037,7 @@ Vvveb.Components.extend("_base", "html/image", {
         name: "Image",
         key: "src",
         htmlAttr: "src",
-        inputtype: FileUploadInput
+        inputtype: ImageInput
     }, {
         name: "Width",
         key: "width",
@@ -245,6 +1068,7 @@ Vvveb.Components.extend("_base", "html/label", {
     properties: [{
         name: "For id",
         htmlAttr: "for",
+        key: "for",
         inputtype: TextInput
     }]
 });
@@ -341,11 +1165,12 @@ Vvveb.Components.extend("_base", "html/button", {
     }, {
         name: "Disabled",
         key: "disabled",
-        htmlAttr: "disabled",
+        htmlAttr: "class",
         inputtype: ToggleInput,
+        validValues: ["disabled"],
         data: {
-            on: "disabled-true",
-            off: "disabled-false"
+            on: "disabled",
+            off: ""
         }
     }]
 });
@@ -918,7 +1743,7 @@ Vvveb.Components.extend("_base", "html/selectinput", {
         name: "",
         key: "addChild",
         inputtype: ButtonInput,
-        data: {text:"Add option"},
+        data: {text:"Add option", icon:"la-plus"},
         onChange: function(node)
         {
 			 $(node).append('<option value="value">Text</option>');
@@ -1229,7 +2054,7 @@ Vvveb.Components.add("html/gridcolumn", {
 		},
 		
 		onChange: function(node, value, input) {
-			_class = node.attr("class");
+			var _class = node.attr("class");
 			
 			//remove previous breakpoint column size
 			_class = _class.replace(new RegExp(input.name + '-\\d+?'), '');
@@ -1246,7 +2071,10 @@ Vvveb.Components.add("html/gridrow", {
     image: "icons/grid_row.svg",
     classes: ["row"],
     html: '<div class="row"><div class="col-sm-4"><h3>col-sm-4</h3></div><div class="col-sm-4 col-5"><h3>col-sm-4</h3></div><div class="col-sm-4"><h3>col-sm-4</h3></div></div>',
-    
+    children :[{
+		name: "html/gridcolumn",
+		classesRegex: ["col-"],
+	}],
 	beforeInit: function (node)
 	{
 		properties = [];
@@ -1258,7 +2086,7 @@ Vvveb.Components.add("html/gridrow", {
 			
 			var reg = /col-([^-\$ ]*)?-?(\d+)/g; 
 			var match;
-			data = {};
+			var data = {};
 
 			while ((match = reg.exec(_class)) != null) {
 				data["col" + ((match[1] != undefined)?"_" + match[1]:"")] = match[2];
@@ -1270,12 +2098,14 @@ Vvveb.Components.add("html/gridrow", {
 				key: "column" + i,
 				//index: i - 1,
 				columnNode: this,
+				col:12,
+				inline:true,
 				inputtype: GridInput,
 				data: data,
 				onChange: function(node, value, input) {
 
 					//column = $('[class*="col-"]:eq(' + this.index + ')', node);
-					column = $(this.columnNode);
+					var column = $(this.columnNode);
 					
 					//if remove button is clicked remove column and render row properties
 					if (input.nodeName == 'BUTTON')
@@ -1320,12 +2150,14 @@ Vvveb.Components.add("html/gridrow", {
 	}, {
         name: "Column",
         key: "column1",
+        inline:true,
+        col:12,
         inputtype: GridInput
 	}, {
         name: "",
         key: "addChild",
         inputtype: ButtonInput,
-        data: {text:"Add column"},
+        data: {text:"Add column", icon:"la la-plus"},
         onChange: function(node)
         {
 			 $(node).append('<div class="col-3">Col-3</div>');
@@ -1336,4 +2168,166 @@ Vvveb.Components.add("html/gridrow", {
 			 return node;
 		}
 	}]
+});
+
+
+Vvveb.Components.extend("_base", "html/paragraph", {
+    nodes: ["p"],
+    name: "Paragraph",
+	image: "icons/paragraph.svg",
+	html: '<p>Lorem ipsum</p>',
+    properties: [{
+        name: "Text align",
+        key: "text-align",
+        htmlAttr: "class",
+        inputtype: SelectInput,
+        validValues: ["", "text-left", "text-center", "text-right"],
+        inputtype: RadioButtonInput,
+        data: {
+			extraclass:"btn-group-sm btn-group-fullwidth",
+            options: [{
+                value: "",
+                icon:"la la-close",
+                //text: "None",
+                title: "None",
+                checked:true,
+            }, {
+                value: "left",
+                //text: "Left",
+                title: "text-left",
+                icon:"la la-align-left",
+                checked:false,
+            }, {
+                value: "text-center",
+                //text: "Center",
+                title: "Center",
+                icon:"la la-align-center",
+                checked:false,
+            }, {
+                value: "text-right",
+                //text: "Right",
+                title: "Right",
+                icon:"la la-align-right",
+                checked:false,
+            }],
+        },
+	}]
+});
+
+Vvveb.Components.extend("_base", "html/video", {
+    nodes: ["video"],
+    name: "Video",
+    html: '<video width="320" height="240" playsinline loop autoplay><source src="https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"><video>',
+    dragHtml: '<img  width="320" height="240" src="' + Vvveb.baseUrl + 'icons/video.svg">',
+	image: "icons/video.svg",
+    properties: [{
+        name: "Src",
+        child: "source",
+        key: "src",
+        htmlAttr: "src",
+        inputtype: LinkInput
+    },{
+        name: "Width",
+        key: "width",
+        htmlAttr: "width",
+        inputtype: TextInput
+    }, {
+        name: "Height",
+        key: "height",
+        htmlAttr: "height",
+        inputtype: TextInput
+    },{
+        name: "Muted",
+        key: "muted",
+        htmlAttr: "muted",
+        inputtype: CheckboxInput
+    },{
+        name: "Loop",
+        key: "loop",
+        htmlAttr: "loop",
+        inputtype: CheckboxInput
+    },{
+        name: "Autoplay",
+        key: "autoplay",
+        htmlAttr: "autoplay",
+        inputtype: CheckboxInput
+    },{
+        name: "Plays inline",
+        key: "playsinline",
+        htmlAttr: "playsinline",
+        inputtype: CheckboxInput
+    },{
+        name: "Controls",
+        key: "controls",
+        htmlAttr: "controls",
+        inputtype: CheckboxInput
+    }]
+});
+
+
+Vvveb.Components.extend("_base", "html/button", {
+    nodes: ["button"],
+    name: "Html Button",
+    image: "icons/button.svg",
+    html: '<button>Button</button>',
+    properties: [{
+        name: "Text",
+        key: "text",
+        htmlAttr: "innerHTML",
+        inputtype: TextInput
+    }, {
+        name: "Name",
+        key: "name",
+        htmlAttr: "name",
+        inputtype: TextInput
+    }, {
+        name: "Type",
+        key: "type",
+		htmlAttr: "type",
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "button",
+				text: "button"
+			}, {	
+				value: "reset",
+				text: "reset"
+			}, {
+				value: "submit",
+				text: "submit"
+			}],
+		}
+   	},{
+        name: "Autofocus",
+        key: "autofocus",
+        htmlAttr: "autofocus",
+        inputtype: CheckboxInput
+   	},{
+        name: "Disabled",
+        key: "disabled",
+        htmlAttr: "disabled",
+        inputtype: CheckboxInput
+    }]
+});   
+
+Vvveb.Components.extend("_base", "_base", {
+	 properties: [
+	 {
+        name: "Font family",
+        key: "font-family",
+		htmlAttr: "style",
+        sort: base_sort++,
+        col:6,
+		inline:true,
+        inputtype: SelectInput,
+        data: {
+			options: [{
+				value: "",
+				text: "extended"
+			}, {
+				value: "Ggoogle ",
+				text: "google"
+			}]
+		}
+    }]
 });

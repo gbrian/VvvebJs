@@ -16,11 +16,11 @@ limitations under the License.
 https://github.com/givanz/VvvebJs
 */
 
-Vvveb.ComponentsGroup['Server Components'] = ["components/products", "components/categories", "components/manufacturers", "components/search", "components/user", "components/product_gallery", "components/cart", "components/checkout", "components/filters", "components/product", "components/slider"];
+Vvveb.ComponentsGroup['Server Components'] = ["components/products", "components/product", "components/categories", "components/manufacturers", "components/search", "components/user", "components/product_gallery", "components/cart", "components/checkout", "components/filters", "components/product", "components/slider"];
 
 
 Vvveb.Components.add("components/product", {
-    name: "Products",
+    name: "Product",
     attributes: ["data-component-product"],
 
     image: "icons/map.svg",
@@ -77,54 +77,76 @@ Vvveb.Components.add("components/product", {
 
 Vvveb.Components.add("components/products", {
     name: "Products",
-    classes: ["component_products"],
+    attributes: ["data-component-products"],
+
     image: "icons/products.svg",
     html: '<div class="form-group"><label>Your response:</label><textarea class="form-control"></textarea></div>',
-    onPropertiesShow: function ()
+
+    init: function (node)
 	{
-		$('.form-group[class*="group-"]').hide();
-		current = $('.form-group input[name="type"]:checked').val();
-		//console.log(current);
-		//console.log(this.el);
-		$('.form-group[class*="group-' + current + '"]').show();
-		
-		jQuery("input.product_autocomplete", this.el).autocomplete("/?module=ajax&action=product_autocomplete", {json_key:'products'});		
+		$('.form-group[data-group]').hide();
+		if (node.dataset.type != undefined)
+		{
+			$('.form-group[data-group="'+ node.dataset.type + '"]').show();
+		} else
+		{		
+			$('.form-group[data-group]:first').show();
+		}
 	},
     properties: [{
-        name: "Type",
+        name: false,
         key: "type",
-        nolabel:true,
-        inputtype: RadioInput,
+        inputtype: RadioButtonInput,
+		htmlAttr:"data-type",
         data: {
+            inline: true,
+            extraclass:"btn-group-fullwidth",
             options: [{
                 value: "autocomplete",
                 text: "Autocomplete",
-                icon:"linecons-user",
-                isChecked:true,
+                title: "Autocomplete",
+                icon:"la la-search",
+                checked:true,
             }, {
                 value: "automatic",
-                icon:"linecons-cog",
-                text: "Automatic"
+                icon:"la la-cog",
+                text: "Configuration",
+                title: "Configuration",
             }],
-            name:"type",
-			onChange : function(event) {
-				current = $(event.currentTarget).val();
-				$('.form-group[class*="group-"]').hide();
-				$('.form-group[class*="group-' + current + '"]').show();
-
-			},            
         },
+		onChange : function(element, value, input) {
+			
+			$('.form-group[data-group]').hide();
+			$('.form-group[data-group="'+ input.value + '"]').show();
+
+			return element;
+		}, 
+		init: function(node) {
+			return node.dataset.type;
+		},            
     },{
         name: "Products",
-        key: "height",
-        nolabel:true,
+        key: "products",
         group:"autocomplete",
-        inputtype: ProductsInput,
+        htmlAttr:"data-products",
+        inline:true,
+        col:12,
+        inputtype: AutocompleteList,
+        data: {
+            url: "/admin/?module=editor&action=productsAutocomplete",
+        },
     },{
         name: "Number of products",
         group:"automatic",
         key: "limit",
-        inputtype: TextInput,
+		htmlAttr:"data-limit",
+        inputtype: NumberInput,
+        data: {
+            value: "8",//default
+            min: "1",
+            max: "1024",
+            step: "1"
+        },        
         getFromNode: function(node) {
             return 10
         },
@@ -132,7 +154,14 @@ Vvveb.Components.add("components/products", {
         name: "Start from page",
         group:"automatic",
         key: "page",
-        inputtype: TextInput,
+		htmlAttr:"data-page",
+        data: {
+            value: "1",//default
+            min: "1",
+            max: "1024",
+            step: "1"
+        },        
+        inputtype: NumberInput,
         getFromNode: function(node) {
             return 0
         },
@@ -140,6 +169,7 @@ Vvveb.Components.add("components/products", {
         name: "Order by",
         group:"automatic",
         key: "order",
+		htmlAttr:"data-order",
         inputtype: SelectInput,
         data: {
             options: [{
@@ -166,39 +196,37 @@ Vvveb.Components.add("components/products", {
         name: "Category",
         group:"automatic",
         key: "category",
-        inputtype: TextInput
+		htmlAttr:"data-category",
+        inline:true,
+        col:12,
+        inputtype: AutocompleteList,
+        data: {
+            url: "/admin/?module=editor&action=productsAutocomplete",
+        },
+
 	},{
         name: "Manufacturer",
         group:"automatic",
-        key: "category",
-        inputtype: TextInput
+        key: "manufacturer",
+		htmlAttr:"data-manufacturer",
+        inline:true,
+        col:12,
+        inputtype: AutocompleteList,
+        data: {
+            url: "/admin/?module=editor&action=productsAutocomplete",
+		}
 	},{
-        nolabel:true,
-        inputtype: TextInput,
-        data: {text:"Fields"}
-	},{
-        name: "Name",
-        key: "category",
-        inputtype: TextInput
-	},{
-        name: "Price",
-        key: "category",
-        inputtype: TextInput
-	},{
-        name: "Image",
-        key: "category",
-        inputtype: TextInput
-	},{
-        name: "Sale badge",
-        key: "category",
-        inputtype: TextInput
-	},{
-        name: "Currency",
-        key: "category",
-        inputtype: TextInput
-    }
-    
-    ]
+        name: "Manufacturer 2",
+        group:"automatic",
+        key: "manufacturer 2",
+		htmlAttr:"data-manufacturer2",
+        inline:true,
+        col:12,
+        inputtype: AutocompleteList,
+        data: {
+            url: "/admin/?module=editor&action=productsAutocomplete",
+        },
+    }]
 });
 
 Vvveb.Components.add("components/manufacturers", {
@@ -207,7 +235,7 @@ Vvveb.Components.add("components/manufacturers", {
     image: "icons/categories.svg",
     html: '<div class="form-group"><label>Your response:</label><textarea class="form-control"></textarea></div>',
     properties: [{
-        nolabel:true,
+        nolabel:false,
         inputtype: TextInput,
         data: {text:"Fields"}
 	},{
